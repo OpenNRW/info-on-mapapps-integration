@@ -1,0 +1,29 @@
+.mainMap:before {
+    content: '';
+    background-image: url(./images/logo_BfN_langes_f_klein.png);
+    width: 162px;
+    height: 191px;
+    position: absolute;
+    right: 0;
+    z-index: 1;
+}
+.header .logo {
+    width: 70px;
+}
+.logo:before {
+    content: '';
+    background-image: url(./images/Logo_BfN_Logo.png);
+    width: 90px;
+    height: 30px;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+.ctTpl_seasons .mainMap .omnisearch {
+    z-index: 5;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 390px !important;
+}

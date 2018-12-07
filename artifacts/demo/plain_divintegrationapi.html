@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<title>LoadService via div and integrationAPI</title>
+<head>
+	<style>
+		div,p,li {
+			font-family: "Arial", serif;
+		}
+	</style>
+
+	<!-- The following three lines are only used to style the code blocks in a nice way-->
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<div id="divContainer">
+	<!--********************-->
+	<!--********************-->
+
+	<!--Documentation is here-->
+
+	<!--********************-->
+	<!--********************-->
+	<div id="controllsContainer" style="width:48%;float: right;height: 800px;overflow: auto;">
+		<div id="loadingHint">Please wait ... map is loading</div>
+		<div id="documentation">
+			<h3>mapapps div Integration API</h3>
+			<h4>This demo shows, how to lauch mapapps in a custom div and loaded a service via integrationAPI functionalities</h4>
+
+			<div id="codeBox" style="height:10%;overflow:auto">
+				<ol>
+					<li>
+						Initialize the geoviewer using the Launcher defining the app-name and target DOM-node.
+					</li>
+					<li>
+						Wait for the framework until it is loaded
+					</li>
+					<li>
+						Load the integration-API module and wait for it.
+					</li>
+					<li>
+						Execute your logic (like connection click events, modifying ui, loading a wms url,...) in the integration-API scope.
+					</li>
+				</ol>
+
+				<!---->
+				<!-- Overall function to load the geoviewer and its integration api module-->
+				<!---->
+				<pre>
+					<code class="javascript">
+					&lt;script type="text/javascript"&gt;
+						//load mapapps viewer
+						//it is configLocation: "builderapps" if you access a remote mapapps host
+						$apprt.load(function(Launcher){
+							(new Launcher({configLocation: "builderapps"}).launchAppFromParam({
+								//pass param key to mapapps Launcher
+								param : "app",
+								//pass param value to mapapps Launcher
+								defaultApp: "egov",
+								//pass div-ID, where map should be placed
+								domId: "mapappsmap"
+							//after mapapps viewer is loaded, module can be loaded
+							})).then(function(framework){
+								//load needed integration-API module
+								require(["ct/integration"],function(integration){
+									// wait for integration-API module
+									integration(framework).then(function(integrationAPI){
+										/*********
+										*********
+										Your magic goes here
+										*********
+										*********/
+									});
+								});
+							});
+						});
+					&lt;/script&gt;
+					</code>
+				</pre>
+			</div>
+		</div>
+		<hr style="height: 3px;	color: #333;background-color: #333;">
+
+		<div id="buttonContainer" style="padding-bottom: 20px;">
+			<p>Use map.apps IntegrationAPI to load service via loadServiceViaSDILoadServiceParameterResolver()</p>
+			<button id="buttonToLoadWMSViaIntegrationAPISDILoadService" type="button">Load service via loadServiceViaSDILoadServiceParameterResolver</button>
+
+			<!---->
+			<!-- Documentation for loading a service via the standard sdi.loadservice parameter resolver-->
+			<!---->
+			<pre>
+				<code class="javascript">
+				...
+					document.getElementById("buttonToLoadWMSViaIntegrationAPISDILoadService").addEventListener("click", function () {
+							var params = {};
+							params.serviceURL = "http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS";
+							console.log("Test load WMS via sdi_loadservice");
+							integrationAPI.loadServiceViaSDILoadServiceParameterResolver(params);
+					})
+				...
+				</code>
+			</pre>
+		</div>
+	</div>
+
+	<!---->
+	<!-- mapviewer DIV-->
+	<!---->
+	<!-- Define div, where geoviewer should be placed-->
+	<!-- Width and Height attributes are needed, if you want to show the map -->
+	<div id="mapappsmap" style="float:left; position: absolute; width: 48%; height: 800px;"></div>
+
+</div>
+
+
+
+
+
+
+
+<!--********************-->
+<!--********************-->
+
+<!--Implementation is in the following script-->
+
+<!--********************-->
+<!--********************-->
+<!--Load needed dojo-init.js file from mapapps sources-->
+<!--Please note that we use a local map.apps instance as we need the custom bundles "opennrw_integrationapiExtender" and "opennrw_patches" (check readme.md)-->
+<!--If you have a map.apps instance fulfilling all the requirements, you do not need to modify the dojoConfig-->
+<script type="text/javascript" src="http://localhost:9090/resources/jsregistry/root/ct/3.9.5/dojo-init.js"></script>
+<!--This part is only needed because of localhost mapapps instance-->
+<script type="text/javascript">
+	window.dojoConfig = {
+		ct: {ensureLangParameter: false},
+		packages: [
+			// add local apps directory as amd package
+			{name: "localapps", location: "http://localhost:8080/mapapps/js/apps"},
+			// add local bundles directory as amd package
+			{name: "localbundles", location: "http://localhost:8080/mapapps/resources/jsregistry/root"}
+		]
+	};
+
+</script>
+
+
+<script type="text/javascript">
+
+
+	//load mapapps viewer
+	$apprt.load(function(Launcher){
+		//it is <<configLocation: "builderapps">> if you access a remote mapapps host
+		(new Launcher({configLocation: "localapps"}).launchAppFromParam({
+			param : "app",
+			defaultApp: "minTestApp",
+			domId: "mapappsmap"
+		})).then(function(framework){
+			//load needed integration-API module
+			require(["ct/integration"],function(integration){
+				// wait for integration-API module
+				integration(framework).then(function(integrationAPI){
+					//tidy up ui
+                    integrationAPI.onMapLoaded(function(){
+                        document.getElementById("loadingHint").remove();
+                        //connect click event
+                        document.getElementById("buttonToLoadWMSViaIntegrationAPISDILoadService").addEventListener("click", function () {
+                            var params = {};
+                            params.serviceURL = "http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS";
+                            console.log("Test load WMS via sdi_loadservice");
+                            integrationAPI.loadServiceViaSDILoadServiceParameterResolver(params);
+                        });
+                    });
+				});
+			});
+		});
+	});
+</script>
+
+
+</body>
+</html>

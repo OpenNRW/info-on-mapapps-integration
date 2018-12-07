@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<title>LoadService via URL Param in new tab or window</title>
+<head>
+    <style>
+        div, p, li {
+            font-family: "Arial", serif;
+        }
+    </style>
+    <!-- The following three lines are only used to style the code blocks in a nice way-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body>
+
+
+<div id="divContainer">
+    <!--********************-->
+    <!--********************-->
+
+    <!--Documentation is here-->
+
+    <!--********************-->
+    <!--********************-->
+    <div id="controllsContainer" style="width:75%;height: 800px;overflow: auto;">
+        <div id="documentation">
+            <h3>OpenViewer in NewTab</h3>
+            <h4>This demo shows how to pass the serviceURL as a param to the geoviewer in new tab.</h4>
+            <p>Concatenate mapapps app url and WMS url and create new target url with the schema like &lt;mapappsAppURL&gt;&amp;serviceURL=&lt;wmsURL&gt;</p>
+        </div>
+
+        <div id="buttonContainer" style="padding-bottom: 20px;">
+            <p>A new tab will be opened where the WMS URL is passed as a param</p>
+            <button id="buttonToTestLoadWMSInANewTab" type="button">Open a new tab</button>
+                <pre>
+                    <code class="javascript">
+                ...
+                    document.getElementById("buttonToTestLoadWMSInANewTab").addEventListener("click", function () {
+                        var finalURL = "https://www.mapapps-a.nrw.de/standalone-3.9.2/geoportal/?lang=de&serviceURL=http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS";
+                        window.open(finalURL, "_blank");
+                    })
+                ...
+                    </code>
+                </pre>
+        </div>
+    </div>
+</div>
+
+
+<!--********************-->
+<!--********************-->
+
+<!--Implementation is in the following script-->
+
+<!--********************-->
+<!--********************-->
+
+
+<script type="text/javascript">
+    document.getElementById("buttonToTestLoadWMSInANewTab").addEventListener("click", function () {
+        //1.) Concatenate mapapps app url and WMS url and create new target url with the schema like <mapappsAppURL>&serviceURL=<wmsURL>
+        //2.) open a new tab
+        var finalURL = "https://www.mapapps-a.nrw.de/standalone-3.9.2/geoportal/?lang=de&serviceURL=http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS";
+        window.open(finalURL, "_blank");
+    })
+</script>
+</body>
+</html>

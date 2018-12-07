@@ -1,0 +1,19 @@
+{
+    "Bundle-SymbolicName": "opennrw_patches",
+    "Bundle-Version": "1.0.0",
+    "Bundle-Name": "Patched-components",
+    "Bundle-Description": "Patched-components",
+    "Bundle-Vendor": "con terra GmbH",
+    "Product-Name": "opennrw",
+    "Bundle-Category": [
+        "patches"
+    ],
+    "Bundle-Layer": "module",
+    "Bundle-AutoStartPolicy": "yes",
+    "Bundle-StartLevel": 4,
+    "Require-Bundle": [
+    ],
+    "Components": [
+
+    ]
+}

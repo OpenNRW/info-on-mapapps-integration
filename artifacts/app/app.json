@@ -1,0 +1,107 @@
+{
+	"appName": "minTestApp",
+	"properties": {
+		"title": "minTestApp",
+		"amdPackages": "apprt@^3.9.0"
+	},
+	"load": {
+		"bundleLocations": [
+			{
+				"name": "localbundles",
+				"noprefetch": true
+			},
+			{
+				"name": "bundles",
+				"noprefetch": true
+			}
+		],
+		"allowedBundles": [
+			//min set of required map.apps bundles
+			"system@^3.9.0",
+			"templatelayout@^3.9.0",
+			"map@^3.9.0",
+			"toolset@^3.9.0",
+			"toolrules@^3.9.0",
+			//needed bundles to load service via standard functionality (serviceURL as URL param) or via integrationAPI using custom bundles
+			"parametermanager@^3.9.0",
+			"sdi_loadservice@^4.0.4",
+			"integration@^3.9.0",
+			//custom open.nrw bundles to load service via integration API
+			"opennrw_integrationapiExtender",
+			"opennrw_patches"
+		],
+		"i18n": [
+			"appContext:/nls/bundle"
+		],
+		"require": [
+			"dojo/i18n!appContext/nls/bundle"
+		]
+	},
+	"bundles": {
+		"map": {
+			"MappingResourceRegistryFactory": {
+				"_knownServices": {
+					"services": [
+						{
+							"id": "worldtopo",
+							"url": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer",
+							"type": "AGS_TILED",
+							"title": "World Topo",
+							"description": "World Topo"
+						}
+					]
+				}
+			},
+			"MapModelFactory": {
+				"_configData": {
+					"maps": [
+						{
+							"id": "default",
+							"glass_pane": [],
+							"operationalLayer": [
+							],
+							"baseLayer": [
+								{
+									"enabled": true,
+									"service": "worldtopo"
+								}
+							]
+						}
+					]
+				}
+			},
+			"MapState": {
+				"initialExtent": {
+					"xmin": -896965.2750203621,
+					"xmax": 3212289.3655896215,
+					"ymin": 5170567.199262223,
+					"ymax": 8086181.206171212,
+					"wkid": 3857
+				}
+			},
+			"MapWidgetFactory": {
+				"_esriMapDefaultOpts": {
+					"slider": false,
+					"nav": false,
+					"logo": false,
+					"sliderStyle": "small",
+					"doubleClickZoom": true,
+					"clickRecenter": true,
+					"pan": true,
+					"rubberBandZoom": true,
+					"keyboardNavigation": true,
+					"scrollWheelZoom": true,
+					"sliderPosition": "bottom-right",
+					"displayGraphicsOnPan": true,
+					"fadeOnZoom": true,
+					"showAttribution": true,
+					"sliderOrientation": "vertical",
+					"sliderLabels": [
+						""
+					],
+					"navigationMode": "css-transforms"
+				}
+			}
+		}
+	}
+}

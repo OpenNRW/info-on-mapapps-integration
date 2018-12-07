@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<title>Load mapapps in iframe and pass wms-url as url-param</title>
+<head>
+	<style>
+		div,p,li {
+			font-family: "Arial", serif;
+		}
+	</style>
+</head>
+<body>
+<div id="documentation">
+	<h2>Demo - iframe Integration</h2>
+</div>
+
+
+
+<!-- -->
+<!-- First iframe demo (iframe via html and link)-->
+<!-- -->
+<!--Documentation START-->
+<br>
+<h4>Define iframe in DOM and pass iframe Source via html link element</h4>
+<div id="codeBox_iframeInDOMAndLoadViaLink" style="height:10%;width:99%;overflow:auto!important">
+	<pre style="background-color: #f0f0f0;">
+		&lt;!-- Define iframe as dom node element --&gt;
+		&lt;iframe id="iframe_loadUrl" width="800px" height="800px" name="iframe_loadUrl"&gt;
+		&lt;!-- Set href attribute to iframe dom element --&gt;
+		&lt;a href="https://www.mapapps-a.nrw.de/standalone-3.9.2/geoportal/?lang=de&serviceURL=http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS" target="iframe_loadUrl">Load Geoviewer to iframe&lt;/a&gt;
+	</pre>
+</div>
+<!--Documentation END-->
+
+
+<!--Implementation START-->
+<!-- Define new iFrame in dom and load content via passed link using link -->
+<iframe id="iframe_loadUrl" width="800px" height="800px" name="iframe_loadUrl"></iframe>
+<br>
+<!-- https://www.geoportal.nrw/mapapps-a-standalone-3.9.2-geoportal.html?lang=de -->
+<a href="https://www.mapapps-a.nrw.de/standalone-3.9.2/geoportal/?lang=de&serviceURL=http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS" target="iframe_loadUrl" style="font-weight: bold;">Load Geoviewer source to iframe via link</a>
+<!--Implementation END-->
+<hr>
+<hr>
+
+
+
+
+
+<!-- -->
+<!-- Second iframe demo (iframe via javascript function)-->
+<!-- -->
+<!--Documentation START-->
+<h4>Create iframe, define its attributes and place it at defined dom-node using javascript function; trigger function using link</h4>
+<div id="codeBox_function" style="height:10%;width:99%;overflow:auto!important">
+	<pre style="background-color: #f0f0f0;">
+		&lt;script type="text/javascript"&gt;
+		//define function which created new iframe
+		var createIFrame = function () {
+			var iframe = document.createElement('iframe');
+			iframe.src = "https://www.mapapps-a.nrw.de/standalone-3.9.2/geoportal/?lang=de?lang=de&serviceURL=http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS";
+			iframe.height = "800px";
+			iframe.width = "800px";
+			//place iframe to target dom node
+			document.getElementById("anchorForIFrameUsingCreateIFrameFunction").appendChild(iframe);
+		};
+		&lt;/script&gt;
+
+		&lt;!-- anchor element, where iframe will be placed --&gt;
+		&lt;div id="anchorForIFrameUsingCreateIFrameFunction"&gt&lt/div&gt;
+		&lt;!-- call defined function --&gt;
+		&lt;a&gt id="createIFrameLink" href="#" onclick="createIFrame();return false;">Create iframe using function&lt;/a&gt;
+	</pre>
+</div>
+<!--Documentation END-->
+
+
+<!--Implementation START-->
+<script type="text/javascript">
+	//https://www.geoportal.nrw/mapapps-a-standalone-3.9.2-geoportal.html?lang=de
+    var createIFrame = function () {
+        var iframe = document.createElement('iframe');
+        iframe.src = "https://www.mapapps-a.nrw.de/standalone-3.9.2/geoportal/?lang=de&serviceURL=http://www.geoserver.hochsauerlandkreis.de/arcgis/services/wasser/WSG/MapServer/WmsServer?REQUEST=GetCapabilities&SERVICE=WMS";
+        iframe.height = "800px";
+        iframe.width = "800px";
+        document.getElementById("anchorForIFrameUsingCreateIFrameFunction").appendChild(iframe);
+    };
+</script>
+<div id="anchorForIFrameUsingCreateIFrameFunction"></div>
+<br>
+<a id="createIFrameLink" href="#" onclick="createIFrame();return false;" style="font-weight: bold;">Create iframe using function</a>
+<!--Implementation END-->
+<hr>
+</body>
+</html>

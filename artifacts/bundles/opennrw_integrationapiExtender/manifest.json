@@ -1,0 +1,118 @@
+/*
+ * COPYRIGHT 2018 con terra GmbH Germany
+ */
+{
+    "Bundle-SymbolicName": "opennrw_integrationapiExtender",
+    "Bundle-Version": "1.0.0",
+    "Bundle-Name": "${bundleName}",
+    "Bundle-Description": "${bundleDescription}",
+    "Bundle-Vendor": "con terra GmbH",
+    "Bundle-Category": [
+        "opennrw"
+    ],
+    "Bundle-AutoStartPolicy": "yes",
+    "Bundle-Layer": "module",
+    //"Bundle-StartLevel": 2,
+    "Require-Bundle": [
+        {
+            "name": "map"
+        },
+        {
+            "name": "sdi_loadservice"
+        },
+        {
+            "name": "integration"
+        },
+        {
+            "name": "parametermanager"
+        }
+    ],
+    "Components": [
+        {
+            //used to patch the sdli-loadservice.LoadServiceConnector.load() function in order to ensure that the urls is correctly formatted and passed to str-resolver
+            //patch needs to be separate component!
+            "name": "LoadServiceConnectorPatch",
+            "references": [
+                {
+                    "name": "loadServiceConnector",
+                    "providing": "sdi_loadservice.LoadServiceConnector"
+                }
+            ]
+        },
+        {
+            //component extends the integrationAPI with two additional functions
+            "name": "IntegrationAPIExtender",
+            "provides": "opennrw_integrationapiExtender.IntegrationAPIExtender",
+            "immediate": true,
+            "properties": {
+            },
+            "references": [
+                {
+                    //used to extend the standard integrationAPI
+                    "name": "mapAppsIntegrationAPI",
+                    "providing": "integration.IntegrationAPI"
+                },
+                {
+                    //Option 1: the sdi-loadservice AddedServicesParameterResolver is called directly using the decodeURLParameter() function
+                    "name": "_addedServicesParameterResolver",
+                    "providing": "ct.api.parametermanager.Parametrizable",
+                    "filter": "(Component-Name=AddedServicesParameterResolver)",
+                    "cardinality": "0..1"
+                },
+                {
+                    //Option 2: a custom function with a separate component is called the handling is done by maipulating the tools state
+                    //IMPORTANT!: We need the <patchBundle>\LoadServiceWizardController.js file (must be loaded before this bundle is loaded)
+                    "name": "_serviceParameterResolver",
+                    "providing": "opennrw_integrationapiExtender.ServiceParameterResolver",
+                    "cardinality": "0..1"
+                }
+            ]
+        },
+        {
+            //component exposes an own parametrizable interface
+            //loading a service to a map is done by enablding the sdi_loadServiceTool and by triggering two ui functions (1.) setting a value to the inputTextfield, 2.) by triggering a button-click)
+            //IMPORTANT: We need the <patchBundle>\LoadServiceWizardController.js file (must be loaded before this bundle is loaded...can be ensured using a lower bundle-startLevel as the startLevel of this bundle)
+            //IMPORTANT: Of couse, the <patchBundle>\LoadServiceWizardController.js can be swapped out in a "overall" patchBundle. We only need to ensure that we have a low(er) Bundle-StartLevel
+            "name": "ServiceParameterResolver",
+            "provides": [
+                "opennrw_integrationapiExtender.ServiceParameterResolver",
+                "ct.api.parametermanager.Parametrizable"
+            ],
+            "immediate": true,
+            "propertiesConstructor": true,
+            "properties": {
+            },
+            "references": [
+                {
+                    "name": "_loadServiceCtrl",
+                    "providing": "sdi_loadservice.LoadServiceWizardController",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "_loadServiceTool",
+                    "providing": "ct.tools.Tool",
+                    "filter": "(id=sdi_loadServiceTool)",
+                    "cardinality": "0..1"
+                }
+            ]
+        },
+        {
+            //component exposes a global window function window.addService(<url>)
+            //IMPORTANT: It is required that mapapps instance is already loaded (like it is integrated in every "drupal-wms-like-site")
+            "name": "GlobalWindowAddServiceController",
+            "provides": ["opennrw_integrationapiExtender.GlobalWindowAddServiceController"],
+            "instanceFactory": false,
+            "immediate": true,
+            "properties": {
+            },
+            "references": [
+                {
+                    "name": "_addedServicesParameterResolver",
+                    "providing": "ct.api.parametermanager.Parametrizable",
+                    "filter": "(Component-Name=AddedServicesParameterResolver)",
+                    "cardinality": "0..1"
+                }
+            ]
+        }
+    ]
+}
